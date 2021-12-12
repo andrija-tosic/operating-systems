@@ -15,8 +15,6 @@ koji ih štampa na standardnom izlazu.
 
 int main(int argc, char* argv[])
 {
-	srand(time(0));
-
 	int pd1[2], pd2[2];
 
 	if (pipe(pd1) == -1 || pipe(pd2) == -1)
@@ -27,6 +25,8 @@ int main(int argc, char* argv[])
 
 	if (fork() != 0)
 	{
+		srand(time(0));
+
 		close(pd1[0]);
 		close(pd2[0]);
 
@@ -46,10 +46,10 @@ int main(int argc, char* argv[])
 			}
 		}
 
-		wait(NULL);
-
 		close(pd1[1]);
 		close(pd2[1]);
+
+		wait(NULL);
 	}
 	else if (fork() != 0)
 	{
@@ -75,10 +75,10 @@ int main(int argc, char* argv[])
 			p = read(pd1[0], &br, sizeof(int));
 		}
 
-		wait(NULL);
-
 		fclose(f);
 		close(pd1[0]);
+
+		wait(NULL);
 	}
 	else
 	{
@@ -96,6 +96,7 @@ int main(int argc, char* argv[])
 
 			p = read(pd2[0], &br, sizeof(int));
 		}
+		printf("\n");
 
 		close(pd2[0]);
 	}
