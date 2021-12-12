@@ -77,6 +77,7 @@ int main(int argc, char* argv[])
 
 		wait(NULL);
 
+		fclose(f);
 		close(pd1[0]);
 	}
 	else
