@@ -6,3 +6,4 @@ paran broj, generisani niz brojeva se koriscenjem datavoda salje drugom procesu 
 upisuje u datoteku BROJEVI.txt. Ukoliko je dobijeni zbir neparan broj, generisani niz brojeva 
 se koriscenjem datavoda salje trecem procesu koji ih stampa na standardnom izlazu.
 */
+
