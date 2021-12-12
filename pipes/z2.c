@@ -40,10 +40,12 @@ int main(int argc, char* argv[])
 		}
 
 		char c;
+		int i = 0;
 
-		while((c = fgetc(f)) != EOF)
+		while((c = fgetc(f)) != EOF && i < 100)
 		{
 			write(pd[1], &c, sizeof(char));
+			i++;
 		}
 
 		fclose(f);
