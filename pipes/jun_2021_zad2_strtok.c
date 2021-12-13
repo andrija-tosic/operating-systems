@@ -8,7 +8,7 @@ int main(int argc, char* argv[])
     if (argc < 3)
         exit(-1);
 
-    int N = atoi(argv[3]);
+    int N = atoi(argv[argc-1]);
 
     int pd[2];
     if (pipe(pd) < 0)
