@@ -13,25 +13,27 @@ ceo broj i ovaj proces odbrojavanja i unosa broja se ponavija sve dok korisnik n
 #include <string.h>
 #include <unistd.h>
 
-pthread_mutex_t mutex;
-pthread_cond_t cond;
-int signalCond;
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t odbrojavaj_cond = PTHREAD_COND_INITIALIZER;
+pthread_cond_t unos_cond = PTHREAD_COND_INITIALIZER;
+int odbrojavaj_bool, unos_bool;
 
 void* odbrojavaj(void* arg)
 {
     pthread_mutex_lock(&mutex);
     while (1) {
-        while (!signalCond) {
-            pthread_cond_wait(&cond, &mutex);
+        while (!odbrojavaj_bool) {
+            pthread_cond_wait(&odbrojavaj_cond, &mutex);
         }
         puts("Thread ulaz");
         puts("Thread locked mutex");
         int n = atoi((char*)arg);
         for (int i = n; i >= 0; i--) {
             printf("%d\n", i);
-            // sleep(2);
         }
-        signalCond = 0;
+        odbrojavaj_bool = 0;
+        unos_bool = 1;
+        pthread_cond_signal(&unos_cond);
         puts("Thread izlaz");
     }
     pthread_mutex_unlock(&mutex);
@@ -40,27 +42,30 @@ void* odbrojavaj(void* arg)
 int main(int argc, char* argv[])
 {
     pthread_t thread;
-    pthread_mutex_init(&mutex, NULL);
-    pthread_cond_init(&cond, NULL);
 
     char unos[20];
 
     puts("Unos:");
     scanf("%s", unos);
-    signalCond = 1;
-    pthread_cond_signal(&cond);
+    odbrojavaj_bool = 1;
+    pthread_cond_signal(&odbrojavaj_cond);
 
     pthread_create(&thread, NULL, odbrojavaj, (void*)unos);
 
     while (strcmp(unos, "KRAJ") != 0) {
         pthread_mutex_lock(&mutex);
+
+        while (!unos_bool) {
+            pthread_cond_wait(&unos_cond, &mutex);
+        }
+
         puts("Unos:");
         scanf("%s", unos);
-        signalCond = 1;
-        pthread_cond_signal(&cond);
+        odbrojavaj_bool = 1;
+        unos_bool = 0;
+        pthread_cond_signal(&odbrojavaj_cond);
 
         pthread_mutex_unlock(&mutex);
-		sleep(3);
     }
 
     pthread_join(thread, NULL);
