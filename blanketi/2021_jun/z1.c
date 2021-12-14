@@ -6,8 +6,6 @@ tu recenicu tako da samo prva rec pocinje velikim slovom, a sve ostale reci mali
 zavrsetku rada ove dve niti glavni program treba da odstampa: "KRAJ".
 */
 
-// ne radi
-
 #include <stdio.h>
 #include <pthread.h>
 #include <stdlib.h>
@@ -31,7 +29,7 @@ void* sortiraj(void* arg)
 	for (char* tok = strtok(recenica, " "); tok != NULL; tok = strtok(NULL, " "))
 	{
 		strcpy(reci[brReci], tok);
-		printf("%s\n", tok);
+		reci[brReci][0] = tolower(reci[brReci][0]);
 		brReci++;
 	}
 	strcpy(reci[brReci], "end");
@@ -55,23 +53,14 @@ void* sortiraj(void* arg)
 }
 
 void* stampaj(void* arg)
-{
+{	
 	char** reci = (char**)arg;
 
 	int i = 0;
+	reci[i][0] = toupper(reci[i][0]);
 	while (strcmp(reci[i], "end") != 0)
 	{
-		if (i == 0)
-		{
-			reci[i][0] = toupper(reci[i][0]);
-		}
-		else
-		{
-			reci[i][0] = tolower(reci[i][0]);
-		}
-
 		printf("%s ", reci[i]);
-
 		i++;
 	}
 
@@ -87,7 +76,7 @@ int main(int argc, char* argv[])
 	fgets(recenica, 50, stdin);
 
 	pthread_create(&thread1, NULL, sortiraj, (void*)recenica);
-	pthread_join(thread1, reci);
+	pthread_join(thread1, &reci);
 
 	pthread_create(&thread2, NULL, stampaj, reci);
 	pthread_join(thread2, NULL);
