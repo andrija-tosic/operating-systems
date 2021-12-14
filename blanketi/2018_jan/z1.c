@@ -29,6 +29,8 @@ void* generisi(void* arg)
 	{
 		pthread_mutex_lock(&mutex);
 
+		p = false;
+
 		sum = 0;
 
 		int index = rand() % N;
@@ -55,10 +57,14 @@ void* generisi(void* arg)
 
 void* stampaj(void* arg)
 {
+	int sum;
+
 	while (1)
 	{
 		pthread_mutex_lock(&mutex);
 
+		sum = 0;
+		
 		while (!p)
 		{
 			pthread_cond_wait(&cond_parna, &mutex);;
@@ -68,8 +74,9 @@ void* stampaj(void* arg)
 		for (int i = 0; i < N; i++)
 		{
 			printf("%d ", niz[i]);
+			sum += niz[i];
 		}
-		printf("\n");
+		printf("\tsum = %d\n", sum);
 
 		pthread_mutex_unlock(&mutex);
 	}
@@ -80,12 +87,14 @@ int main(int argc, char* argv[])
 	srand(time(NULL));
 	pthread_t niti[5];
 
+	pthread_mutex_init(&mutex, NULL);
+	pthread_cond_init(&cond_parna, NULL);
+
 	for (int i = 0; i < 4; i++)
 	{
 		pthread_create(&niti[i], NULL, generisi, NULL);
 	}
 	pthread_create(&niti[4], NULL, stampaj, NULL);
-
 
 	for (int i = 0; i < 5; i++)
 	{
