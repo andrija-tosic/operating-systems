@@ -12,23 +12,15 @@ ceo broj i ovaj proces odbrojavanja i unosa broja se ponavija sve dok korisnik n
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <stdbool.h>
+#include <semaphore.h>
 
-pthread_mutex_t mutex;
-pthread_cond_t cond;
-
-bool uslov = false;
+sem_t sem1, sem2;
 
 void* odbrojavaj(void* arg)
 {
 	while (1)
 	{
-		pthread_mutex_lock(&mutex);
-
-		while (!uslov)
-		{
-			pthread_cond_wait(&cond, &mutex);
-		}
+		sem_wait(&sem1);
 
 		int n = atoi((char*)arg);
 		for (int i = n; i >= 0; i--)
@@ -37,35 +29,30 @@ void* odbrojavaj(void* arg)
 			// sleep(2);
 		}
 
-		uslov = false;
-		pthread_mutex_unlock(&mutex);
+		sem_post(&sem2);
 	}
 }
 
 int main(int argc, char* argv[])
 {
 	pthread_t thread;
-	pthread_mutex_init(&mutex, NULL);
+	sem_init(&sem1, 0, 1);
+	sem_init(&sem2, 0, 0);
 
 	char unos[20];
 	
 	scanf("%s", unos);
-	uslov = true;
-	pthread_cond_signal(&cond);
 
 	pthread_create(&thread, NULL, odbrojavaj, (void*)unos);	
-	
-	sleep(1);
 
 	while (strcmp(unos, "KRAJ") != 0)
 	{
-		sleep(1);
-		pthread_mutex_lock(&mutex);
+		sem_wait(&sem2);
 		scanf("%s", unos);
-		uslov = true;
-		pthread_cond_signal(&cond);
-		pthread_mutex_unlock(&mutex);
+		sem_post(&sem1);
 	}
 
 	pthread_join(thread, NULL);
+	sem_destroy(&sem1);
+	sem_destroy(&sem2);
 }
