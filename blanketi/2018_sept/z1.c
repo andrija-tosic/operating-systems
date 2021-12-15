@@ -22,7 +22,7 @@ int buffer[2] = { 0, 1 };
 
 void* upisi(void* arg)
 {
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 20; i++)
 	{
 		pthread_mutex_lock(&mutex);
 
@@ -78,7 +78,7 @@ int main(int argc, char* argv[])
 
 		pthread_mutex_unlock(&mutex);
 	}
-	upisani = false;
+	upisani = false;	
 
 	pthread_join(thread, NULL);
 
