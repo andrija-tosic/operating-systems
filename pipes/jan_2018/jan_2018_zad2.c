@@ -22,9 +22,7 @@ int main(int argc, char* argv[]) {
 
         char buf[200];
 
-        while (!feof(src_file)) {
-            fread(buf, sizeof(char), 200, src_file);
-
+        while (fread(buf, sizeof(char), 200, src_file)) {
             write(pd[1], buf, 200*sizeof(char));
         }
         close(pd[1]);

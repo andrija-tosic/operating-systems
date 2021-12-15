@@ -8,53 +8,61 @@
 
 int niz[] = {1, 2, 3, 4, 5};
 
-typedef int bool;
+typedef char bool;
 
 pthread_mutex_t mutex;
 pthread_cond_t suma_cond;
-bool parna_suma;
+pthread_cond_t printed_cond;
+bool parna_suma = false; // jako bitno
+bool printed = true; // jako bitno
 
 void* writeThread(void* arg) {
     while (true) {
+        pthread_mutex_lock(&mutex);
+        {
+            while (!printed) {
+                pthread_cond_wait(&printed_cond, &mutex);
+            }
 
-    pthread_mutex_lock(&mutex);
-    {
-        niz[rand() % 5] = rand() % 21 - 10;
+            niz[rand() % 5] = rand() % 21 - 10;
 
-        int sum=0;
-        for (int i=0; i<5; i++)
-            sum += niz[i];
+            int sum=0;
+            for (int i=0; i<5; i++)
+                sum += niz[i];
 
-        printf("Ja sam thread %c\n\n", (char*)arg);
+            printf("Thread(%c)\n", (char*)arg);
 
-        if (sum % 2 == 0) {
-            parna_suma = true;
-            pthread_cond_signal(&suma_cond);
+            if (sum % 2 == 0) {
+                parna_suma = true;
+                printed = false;
+                pthread_cond_signal(&suma_cond);
+            }
         }
-    }
-    pthread_mutex_unlock(&mutex);
+        pthread_mutex_unlock(&mutex);
 
-    sleep(3);
+        sleep(3);
     }
 }
 
 void* printThread(void* arg) {
     while(true) {
-    pthread_mutex_lock(&mutex);
-    {
-        while (!parna_suma) {
-            pthread_cond_wait(&suma_cond, &mutex);
-        }
+        pthread_mutex_lock(&mutex);
+        {
+            while (!parna_suma) {
+                pthread_cond_wait(&suma_cond, &mutex);
+            }
 
-        printf("Suma parna: ");
+            printf("Suma parna: ");
 
-        for (int i=0; i<5; i++) {
-            printf("%d ", niz[i]);
+            for (int i=0; i<5; i++) {
+                printf("%d ", niz[i]);
+            }
+            puts("");
+            parna_suma = false;
+            printed = true;
+            pthread_cond_signal(&printed_cond);
         }
-        puts("");
-        parna_suma = false;
-    }
-    pthread_mutex_unlock(&mutex);
+        pthread_mutex_unlock(&mutex);
     }
 }
 

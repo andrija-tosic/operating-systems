@@ -29,10 +29,9 @@ int main() {
         FILE* f = fopen("z2_src.txt", "r");
         
         close(pd[0]);
-        while (!feof(f)) {
+        while (fread(buf, sizeof(char), 100, f)) {
             puts("p1 reading from src file");
-            if (fread(buf, sizeof(char), 100, f))
-               write(pd[1], buf, sizeof(buf));
+            write(pd[1], buf, sizeof(buf));
         }
         
         close(pd[1]);
