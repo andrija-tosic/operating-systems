@@ -15,6 +15,7 @@ jednakosti treba da se ponovi 10 puta.
 
 pthread_mutex_t mutex;
 pthread_cond_t cond;
+pthread_cond_t cond2;
 bool upisani = false;
 
 int buffer[2] = { 0, 1 };
@@ -24,6 +25,11 @@ void* upisi(void* arg)
 	while (1)
 	{
 		pthread_mutex_lock(&mutex);
+
+		while (upisani)
+		{
+			pthread_cond_wait(&cond2, &mutex);
+		}
 
 		// buffer[0] = rand() % 100 + 100;
 		// buffer[1] = rand() % 100 + 100;
@@ -37,7 +43,7 @@ void* upisi(void* arg)
 
 		pthread_mutex_unlock(&mutex);
 
-		sleep(1);
+		// sleep(1);
 	}
 }
 
@@ -49,10 +55,11 @@ int main(int argc, char* argv[])
 
 	pthread_mutex_init(&mutex, NULL);
 	pthread_cond_init(&cond, NULL);
+	pthread_cond_init(&cond2, NULL);
 
 	pthread_create(&thread, NULL, upisi, NULL);
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 20; i++)
 	{
 		pthread_mutex_lock(&mutex);
 
@@ -67,8 +74,13 @@ int main(int argc, char* argv[])
 		}
 		upisani = false;
 
+		pthread_cond_signal(&cond2);
+
 		pthread_mutex_unlock(&mutex);
 	}
 
 	pthread_join(thread, NULL);
+
+	pthread_mutex_destroy(&mutex);
+	pthread_cond_destroy(&cond);
 }
