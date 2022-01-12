@@ -8,7 +8,6 @@ int main(int argc, char* argv[]) {
 
     int stdout_backup = dup(1);
 
-    dup2(pd[1], 1);
 
     char* program = argv[1];
     char* file_name = argv[2];
@@ -36,8 +35,10 @@ int main(int argc, char* argv[]) {
 
     // dete pokrece program i upisuje u datavod
     else {
+        dup2(pd[1], 1);
         close(pd[0]);
-        execlp(program, program, file_name, NULL);
+        close(pd[1]);
+        execlp(program, program, NULL);
     }
 
     return 0;

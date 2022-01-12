@@ -1,0 +1,74 @@
+systemd-+-ModemManager---2*[{ModemManager}]
+        |-NetworkManager---2*[{NetworkManager}]
+        |-3*[VBoxClient---VBoxClient---2*[{VBoxClient}]]
+        |-VBoxClient---VBoxClient---3*[{VBoxClient}]
+        |-VBoxService---8*[{VBoxService}]
+        |-agetty
+        |-Blueman-tray---2*[{Blueman-tray}]
+        |-colord---2*[{colord}]
+        |-cron
+        |-dBus-daemon
+        |-haveged
+        |-lightdm-+-Xorg---9*[{Xorg}]
+        |         |-lightdm-+-xfce4-session-+-Thunar---2*[{Thunar}]
+        |         |         |               |-agent---2*[{agent}]
+        |         |         |               |-Blueman-applet---3*[{Blueman-applet}]
+        |         |         |               |-light-locker---3*[{light-locker}]
+        |         |         |               |-nm-applet---3*[{nm-applet}]
+        |         |         |               |-polkit-gnome-au---2*[{polkit-gnome-au}]
+        |         |         |               |-ssh-agent
+        |         |         |               |-xfce4-panel-+-panel-1-whisker---2*[{panel-1-whisker}]
+        |         |         |               |             |-panel-16-systra---2*[{panel-16-systra}]
+        |         |         |               |             |-panel-17-pulsea---2*[{panel-17-pulsea}]
+        |         |         |               |             |-panel-18-notifi---2*[{panel-18-notifi}]
+        |         |         |               |             |-panel-19-power----2*[{panel-19-power-}]
+        |         |         |               |             |-panel-21-action---2*[{panel-21-action}]
+        |         |         |               |             `-2*[{xfce4-panel}]
+        |         |         |               |-xfce4-power-man---2*[{xfce4-power-man}]
+        |         |         |               |-xfdesktop---2*[{xfdesktop}]
+        |         |         |               |-xfsettingsd---2*[{xfsettingsd}]
+        |         |         |               |-xfwm4---10*[{xfwm4}]
+        |         |         |               |-xiccd---2*[{xiccd}]
+        |         |         |               `-2*[{xfce4-session}]
+        |         |         `-2*[{lightdm}]
+        |         `-2*[{lightdm}]
+        |-polkitd---2*[{polkitd}]
+        |-rsyslogd---3*[{rsyslogd}]
+        |-rtkit-daemon---2*[{rtkit-daemon}]
+        |-sh---node-+-node-+-zsh---septemBar_2020_---pstree
+        |           |      `-11*[{node}]
+        |           |-node-+-cpptools-+-2*[cpptools-srv---9*[{cpptools-srv}]]
+        |           |      |          `-20*[{cpptools}]
+        |           |      |-node---6*[{node}]
+        |           |      `-11*[{node}]
+        |           |-node---12*[{node}]
+        |           `-10*[{node}]
+        |-sshd---2*[sshd---sshd---Bash---sleep]
+        |-systemd-+-(sd-pam)
+        |         |-at-spi-Bus-laun-+-dBus-daemon
+        |         |                 `-3*[{at-spi-Bus-laun}]
+        |         |-at-spi2-registr---2*[{at-spi2-registr}]
+        |         |-dBus-daemon
+        |         |-dconf-service---2*[{dconf-service}]
+        |         |-gpg-agent
+        |         |-gvfs-afc-volume---3*[{gvfs-afc-volume}]
+        |         |-gvfs-goa-volume---2*[{gvfs-goa-volume}]
+        |         |-gvfs-gphoto2-vo---2*[{gvfs-gphoto2-vo}]
+        |         |-gvfs-mtp-volume---2*[{gvfs-mtp-volume}]
+        |         |-gvfs-udisks2-vo---3*[{gvfs-udisks2-vo}]
+        |         |-gvfsd-+-gvfsd-trash---2*[{gvfsd-trash}]
+        |         |       `-2*[{gvfsd}]
+        |         |-gvfsd-fuse---5*[{gvfsd-fuse}]
+        |         |-gvfsd-metadata---2*[{gvfsd-metadata}]
+        |         |-oBexd
+        |         |-pipewire---{pipewire}
+        |         |-pipewire-media----{pipewire-media-}
+        |         |-pulseaudio---2*[{pulseaudio}]
+        |         |-xfce4-notifyd---2*[{xfce4-notifyd}]
+        |         `-xfconfd---2*[{xfconfd}]
+        |-systemd-journal
+        |-systemd-logind
+        |-systemd-udevd
+        |-udisksd---4*[{udisksd}]
+        |-upowerd---2*[{upowerd}]
+        `-xcape---{xcape}

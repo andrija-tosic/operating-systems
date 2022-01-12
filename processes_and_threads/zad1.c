@@ -16,7 +16,7 @@ Vrednost N se takođe prosleđuje kao argument komandne linije. Sinhronizovati r
 union semun {
     int val;
     struct semid_ds* buf;
-    ushort* array;
+    unsigned short* array;
     struct seminfo* __buf;
     void* __pad;
 };

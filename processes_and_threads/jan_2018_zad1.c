@@ -13,8 +13,7 @@ typedef char bool;
 pthread_mutex_t mutex;
 pthread_cond_t suma_cond;
 pthread_cond_t printed_cond;
-bool parna_suma = false; // jako bitno
-bool printed = true; // jako bitno
+bool printed;
 
 void* writeThread(void* arg) {
     while (true) {
@@ -33,7 +32,6 @@ void* writeThread(void* arg) {
             printf("Thread(%c)\n", (char*)arg);
 
             if (sum % 2 == 0) {
-                parna_suma = true;
                 printed = false;
                 pthread_cond_signal(&suma_cond);
             }
@@ -48,7 +46,7 @@ void* printThread(void* arg) {
     while(true) {
         pthread_mutex_lock(&mutex);
         {
-            while (!parna_suma) {
+            while (printed) {
                 pthread_cond_wait(&suma_cond, &mutex);
             }
 
@@ -58,7 +56,6 @@ void* printThread(void* arg) {
                 printf("%d ", niz[i]);
             }
             puts("");
-            parna_suma = false;
             printed = true;
             pthread_cond_signal(&printed_cond);
         }
